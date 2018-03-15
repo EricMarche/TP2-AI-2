@@ -1,6 +1,7 @@
 import numpy as np
 import random
 # encoding=utf8
+# np.set_printoptions(threshold=np.nan)
 
 def load_iris_dataset(train_ratio):
     """Cette fonction a pour but de lire le dataset Iris
@@ -49,7 +50,7 @@ def load_iris_dataset(train_ratio):
     # TODO : le code ici pour lire le dataset
 
     # REMARQUE tres importante :
-	# remarquez bien comment les exemples sont ordonnes dans
+    # remarquez bien comment les exemples sont ordonnes dans
     # le fichier du dataset, ils sont ordonnes par type de fleur, cela veut dire que
     # si vous lisez les exemples dans cet ordre et que si par exemple votre ration est de 60%,
     # vous n'allez avoir aucun exemple du type Iris-virginica pour l'entrainement, pensez
@@ -58,12 +59,10 @@ def load_iris_dataset(train_ratio):
 
     number_of_train = int(len(items) * train_ratio)
 
-    print "number of train : ",number_of_train
     for x in range(0, number_of_train):
         train_list.append([items[x][0], items[x][1], items[x][2], items[x][3]])
         train_labels_list.append(conversion_labels[items[x][4].strip()])
 
-    print "number of train : ",number_of_train
     for x in range(number_of_train, len(items)):
         test_list.append([items[x][0], items[x][1], items[x][2], items[x][3]])
         test_labels_list.append(conversion_labels[items[x][4].strip()])
@@ -75,9 +74,9 @@ def load_iris_dataset(train_ratio):
     print "Nombre de test labels: ", len(test_labels_list)
     print test_labels_list
 
-    train = np.array(train_list)
+    train = np.array(train_list).astype(np.float)
     train_labels = np.array(train_labels_list)
-    test = np.array(test_list)
+    test = np.array(test_list).astype(np.float)
     test_labels = np.array(test_labels_list)
 
     # Tres important : la fonction doit retourner 4 matrices (ou vecteurs) de type Numpy.
@@ -118,12 +117,61 @@ def load_congressional_dataset(train_ratio):
 
     # Le fichier du dataset est dans le dossier datasets en attache
     f = open('datasets/house-votes-84.data', 'r')
+    data = f.readlines()
+    random.shuffle(data)
 
+    # print "data : ", data
+
+    train_list = []
+    train_labels_list = []
+    test_list = []
+    test_labels_list = []
+    items = []
+    for lines in data:
+        # print "lines[len(lines) - 1]: ", lines[len(lines) -
+        words = lines.split(',')
+        items.append(words)
+
+    print "items : ", items
 
     # TODO : le code ici pour lire le dataset
+    number_of_train = int(len(items) * train_ratio)
+
+    for x in range(0, number_of_train):
+        train_labels_list.append(conversion_labels[items[x][0]])
+        row = []
+        for y in range(1, len(items[x]) - 1):
+            row.append(conversion_labels[items[x][y].strip()])
+        train_list.append(row)
+
+    for x in range(number_of_train, len(items)):
+        test_labels_list.append(conversion_labels[items[x][0]])
+        row = []
+        for y in range(1, len(items[x]) - 1):
+            row.append(conversion_labels[items[x][y].strip()])
+        test_list.append(row)
 
 
-	# La fonction doit retourner 4 structures de donnees de type Numpy.
+    train = np.array(train_list).astype(np.float)
+    train_labels = np.array(train_labels_list).astype(np.int)
+    test = np.array(test_list).astype(np.float)
+    test_labels = np.array(test_labels_list).astype(np.int)
+
+    print "Nombre de train labels: ", len(train_labels)
+    print train_labels
+
+    print "Nombre de test labels: ", len(test_labels)
+    print test_labels_list
+
+    print "Nombre de train: ", len(train)
+    print train
+
+    print "Nombre de test: ", len(test)
+    print test
+
+
+
+    # La fonction doit retourner 4 structures de donnees de type Numpy.
     return (train, train_labels, test, test_labels)
 
 
@@ -139,9 +187,9 @@ def load_monks_dataset(numero_dataset):
 
     Args:
         numero_dataset: lequel des sous problemes nous voulons charger (1, 2 ou 3 ?)
-		par exemple, si numero_dataset=2, vous devez lire :
-			le fichier monks-2.train contenant les exemples pour l'entrainement
-			et le fichier monks-2.test contenant les exemples pour le test
+    par exemple, si numero_dataset=2, vous devez lire :
+    le fichier monks-2.train contenant les exemples pour l'entrainement
+    et le fichier monks-2.test contenant les exemples pour le test
         les fichiers sont tous dans le dossier datasets
     Retours:
         Cette fonction doit retourner 4 matrices de type Numpy, train, train_labels, test, et test_labels
@@ -157,8 +205,48 @@ def load_monks_dataset(numero_dataset):
           que : test_labels[i] est le label (ou l'etiquette) pour l'exemple test[i]
     """
 
+    train_file_name = 'datasets/monks-%s.train'% (numero_dataset)
+    test_file_name = 'datasets/monks-%s.test'% (numero_dataset)
+    train_file = open(train_file_name, 'r')
+    test_file = open(test_file_name, 'r')
+    data = train_file.readlines()
 
-	# TODO : votre code ici, vous devez lire les fichiers .train et .test selon l'argument numero_dataset
+
+    train_list = []
+    train_labels_list = []
+    test_list = []
+    test_labels_list = []
+    for lines in data:
+        words = lines.split()
+        train_labels_list.append(words.pop(0))
+        # pour le moment on pop l'id pcq il est pas utile et parsable en float
+        words.pop()
+        train_list.append(words)
+
+    data = test_file.readlines()
+    for lines in data:
+        words = lines.split()
+        # pour le moment on pop l'id pcq il est pas utile et parsable en float
+        words.pop()
+        test_labels_list.append(words.pop(0))
+        test_list.append(words)
+
+    train = np.array(train_list).astype(np.float)
+    train_labels = np.array(train_labels_list)
+    test = np.array(test_list).astype(np.float)
+    test_labels = np.array(test_labels_list)
+    
+    # print "Nombre de train labels: ", len(train_labels)
+    # print train_labels
+    #
+    # print "Nombre de test labels: ", len(test_labels)
+    # print test_labels_list
+    #
+    # print "Nombre de train: ", len(train)
+    # print train
+    #
+    # print "Nombre de test: ", len(test)
+    # print test
 
     # La fonction doit retourner 4 matrices (ou vecteurs) de type Numpy.
     return (train, train_labels, test, test_labels)
