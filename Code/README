@@ -1,0 +1,12 @@
+Fait par Eric Marchessault (111 156 117)
+Knn : classificateur utilisant l'algorithme de k-nearest neighbor
+BayesNaif : Classificateur utilisant l'algorithme bayes naif
+load_dataset : classe qui sert de lecture des données
+entrainer_tester : classe qui sert d'éxécution des algorithme
+
+Pour tester le code seulement lancer la commande
+python entrainer_tester.py
+
+Une difficulté rencontré a été le calcule de la variances pour l'algorithme de Bayes. Il est indiqué sur wikipédia que pour calculé la variance un ajustement peut être nécessaire. Je ne savais pas quel était cette valeur j'ai donc décidé de ne pas la mettre. https://en.wikipedia.org/wiki/Naive_Bayes_classifier
+
+

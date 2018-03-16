@@ -8,6 +8,8 @@ vous pouvez rajouter dautres methodes qui peuvent vous etre utiles, mais moi
 je vais avoir besoin de tester les methodes test, predict et test de votre code.
 """
 import numpy as np
+#Import pour calculer le temps d execution de test
+import timeit
 
 class BayesNaif:
 
@@ -52,7 +54,7 @@ class BayesNaif:
         self.group = set(train_labels)
         self.train_list = train
         self.train_labels = train_labels
-        self.means, self.variances, count = self.bayes(train, train_labels)
+        self.means, self.variances = self.bayes(train, train_labels)
 
 
     def predict(self, exemple, label):
@@ -98,26 +100,24 @@ class BayesNaif:
 
         """
         predictions = []
+        start = timeit.default_timer()
         for i in range(0, len(test)):
             prediction = self.predict(test[i], test_labels[i])
             predictions.append(prediction)
         self.confusion_matrix(predictions, test_labels)
+        stop = timeit.default_timer()
+        print "execution time for test : ",stop - start
 
     def bayes(self, train, train_labels):
         means = {}
         variances = {}
-        count = {}
         #Nous permet d avoir un les type de labels
         group = set(train_labels)
         for label in group:
             data_by_label = train[train_labels == label]
             means[label] = data_by_label.mean(axis=0)
             variances[label] = data_by_label.var(axis=0)
-            count[label] = len(train_labels[train_labels == label]) / len(train_labels)
-        # print "means: ", means
-        # print "var: ", variances
-        # print "count", count
-        return means, variances, count
+        return means, variances
 
     #On y passe un vector exemple
     def probability(self, means, variances, group, exemple):
@@ -125,9 +125,6 @@ class BayesNaif:
         for label in group:
             probabilities[label] = 1
             for i in range(0, len(means[label])):
-                # print "means[label][i]: ", means[label][i]
-                # print "variances[label][i]: ", variances[label][i]
-                # print "exemple[i]: ", exemple[i]
                 part_1 = 1/ (np.sqrt(2 * np.pi) * variances[label][i])
                 part_2 = (np.power((exemple[i] - means[label][i]), 2) * -1)/ (2 *np.power(variances[label][i],2))
                 result =  part_1 * np.exp(part_2)

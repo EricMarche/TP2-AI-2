@@ -9,6 +9,8 @@ je vais avoir besoin de tester les methodes test, predict et test de votre code.
 """
 
 import numpy as np
+#Import pour calculer le temps d execution de test
+import timeit
 
 class Knn:
     def __init__(self, **kwargs):
@@ -23,7 +25,6 @@ class Knn:
         self.train_labels = []
 
     def train(self, train, train_labels): #vous pouvez rajouter d'autres attribus au besoin
-
         self.train_list= train
         self.train_labels = train_labels
 
@@ -67,10 +68,14 @@ class Knn:
         Bien entendu ces tests doivent etre faits sur les donnees de test seulement
         """
         predictions = []
+        start = timeit.default_timer()
+
         for i in range(0, len(test)):
             value, prediction = self.predict(test[i], test_labels[i])
             predictions.append(prediction)
         self.confusion_matrix(predictions, test_labels)
+        stop = timeit.default_timer()
+        print "execution time for test : ", stop - start
 
     def k_nearest_neighbor(self, data):
         dist_index = []
@@ -79,16 +84,10 @@ class Knn:
             dist = np.linalg.norm(np.array(data) - self.train_list[i])
             dist_index.append([dist, i])
         dist_index = sorted(dist_index)
-        # print "dist_index : ", dist_index
-        # print "train : ", self.train_labels
         for i in range(0, self.k):
-            # print "test : ", self.train_labels[dist_index[i][1]]
             index = dist_index[i][1]
-            # print "index : ", index
             labels.append(self.train_labels[index])
-        # print "labels: ",labels
         most_common_item = max(set(labels), key=labels.count)
-        # print "most_common_item : ", most_common_item
         return most_common_item
 
     def confusion_matrix(self, predictions, test_labels):
