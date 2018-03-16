@@ -18,12 +18,13 @@ class Knn:
         c'est a vous d'utiliser vos propres notations
         """
         self.k = 5
-        self.train = []
+        #Rennome train_list a cause conflit avec fonction train
+        self.train_list= []
         self.train_labels = []
 
     def train(self, train, train_labels): #vous pouvez rajouter d'autres attribus au besoin
 
-        self.train = train
+        self.train_list= train
         self.train_labels = train_labels
 
 
@@ -39,7 +40,10 @@ class Knn:
 
         """
         prediction = self.k_nearest_neighbor(exemple)
-        return 1 if prediction == label else 0
+
+
+        value = 1 if (prediction == label) else 0
+        return value, prediction
 
 
     def test(self, test, test_labels):
@@ -62,50 +66,54 @@ class Knn:
 
         Bien entendu ces tests doivent etre faits sur les donnees de test seulement
         """
-
         predictions = []
-        accuracy = 0
-        for i in range(1, len(test)):
-            value = self.predict(test[i], test_labels[i])
-            accuracy += value
-
-        print "accuracy : ", accuracy / len(test)
-
-
-
-    # def knearest(self, data, k, compare_matrix, compare_matrix_labels) :
-    #     index = []
-    #     labels = []
-    #     #On check les k nearest
-    #     for i in range(0, k):
-    #
-    #         # best_dist = np.linalg.norm(row - compare_matrix[0]) #On veut tu vrm comparer avec la premier value
-    #         best_dist = 999999
-    #         best_index = 0
-    #         for i in range(1, len(compare_matrix)):
-    #             #Peut etre compare_matrix simplement
-    #             dist = np.linalg.norm(np.array(data) - compare_matrix[i])
-    #             # print "dist: ",dist
-    #             if dist < best_dist and i not in index:
-    #                 best_dist = dist
-    #                 best_index = i
-#         index.append(best_index)
-    #         labels.append(compare_matrix_labels[best_index])
-    #     most_common_item = max(set(labels), key=labels.count)
-    #     print "most_common_item : ", most_common_item
-    #     return most_common_item
+        for i in range(0, len(test)):
+            value, prediction = self.predict(test[i], test_labels[i])
+            predictions.append(prediction)
+        self.confusion_matrix(predictions, test_labels)
 
     def k_nearest_neighbor(self, data):
         dist_index = []
         labels = []
-
-        for i in range(1, len(data)):
-            #Peut etre compare_matrix simplement
-            dist = np.linalg.norm(np.array(data) - self.train[i])
+        for i in range(0, len(self.train_list)):
+            dist = np.linalg.norm(np.array(data) - self.train_list[i])
             dist_index.append([dist, i])
         dist_index = sorted(dist_index)
-        for i in range(1, self.k):
-            labels.append(self.train_label[dist_index[i][1]])
+        # print "dist_index : ", dist_index
+        # print "train : ", self.train_labels
+        for i in range(0, self.k):
+            # print "test : ", self.train_labels[dist_index[i][1]]
+            index = dist_index[i][1]
+            # print "index : ", index
+            labels.append(self.train_labels[index])
+        # print "labels: ",labels
         most_common_item = max(set(labels), key=labels.count)
-        print "most_common_item : ", most_common_item
+        # print "most_common_item : ", most_common_item
         return most_common_item
+
+    def confusion_matrix(self, predictions, test_labels):
+        labels = set(test_labels)
+        test = np.array(test_labels)
+        predictions = np.array(predictions)
+
+        # calculate the confusion matrix; labels is numpy array of classification labels
+        matrix = np.zeros((len(labels), len(labels)))
+        for a, p in zip(test, predictions):
+            matrix[a][p] += 1
+
+        false_positive = matrix.sum(axis=0) - np.diag(matrix)
+        false_negative = matrix.sum(axis=1) - np.diag(matrix)
+        true_positive = np.diag(matrix)
+        true_negative = matrix.sum() - (false_negative + false_positive + true_positive)
+
+        accuracy = (true_negative + true_positive) / (true_negative + true_positive + false_negative + false_positive)
+        print "accuracy: ", accuracy
+
+        print "confusion matrix : "
+        print matrix
+
+        precision = true_positive / (true_positive + false_positive)
+        print "Precision : ", precision
+
+        recall = true_positive / (true_positive + false_negative)
+        print "Recall : ", recall

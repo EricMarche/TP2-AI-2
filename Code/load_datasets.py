@@ -1,7 +1,6 @@
 import numpy as np
 import random
 # encoding=utf8
-# np.set_printoptions(threshold=np.nan)
 
 def load_iris_dataset(train_ratio):
     """Cette fonction a pour but de lire le dataset Iris
@@ -67,13 +66,6 @@ def load_iris_dataset(train_ratio):
         test_list.append([items[x][0], items[x][1], items[x][2], items[x][3]])
         test_labels_list.append(conversion_labels[items[x][4].strip()])
 
-
-    print "Nombre de train labels: ", len(train_labels_list)
-    print train_labels_list
-
-    print "Nombre de test labels: ", len(test_labels_list)
-    print test_labels_list
-
     train = np.array(train_list).astype(np.float)
     train_labels = np.array(train_labels_list)
     test = np.array(test_list).astype(np.float)
@@ -120,19 +112,14 @@ def load_congressional_dataset(train_ratio):
     data = f.readlines()
     random.shuffle(data)
 
-    # print "data : ", data
-
     train_list = []
     train_labels_list = []
     test_list = []
     test_labels_list = []
     items = []
     for lines in data:
-        # print "lines[len(lines) - 1]: ", lines[len(lines) -
         words = lines.split(',')
         items.append(words)
-
-    print "items : ", items
 
     # TODO : le code ici pour lire le dataset
     number_of_train = int(len(items) * train_ratio)
@@ -151,25 +138,10 @@ def load_congressional_dataset(train_ratio):
             row.append(conversion_labels[items[x][y].strip()])
         test_list.append(row)
 
-
     train = np.array(train_list).astype(np.float)
     train_labels = np.array(train_labels_list).astype(np.int)
     test = np.array(test_list).astype(np.float)
     test_labels = np.array(test_labels_list).astype(np.int)
-
-    print "Nombre de train labels: ", len(train_labels)
-    print train_labels
-
-    print "Nombre de test labels: ", len(test_labels)
-    print test_labels_list
-
-    print "Nombre de train: ", len(train)
-    print train
-
-    print "Nombre de test: ", len(test)
-    print test
-
-
 
     # La fonction doit retourner 4 structures de donnees de type Numpy.
     return (train, train_labels, test, test_labels)
@@ -211,7 +183,6 @@ def load_monks_dataset(numero_dataset):
     test_file = open(test_file_name, 'r')
     data = train_file.readlines()
 
-
     train_list = []
     train_labels_list = []
     test_list = []
@@ -232,21 +203,9 @@ def load_monks_dataset(numero_dataset):
         test_list.append(words)
 
     train = np.array(train_list).astype(np.float)
-    train_labels = np.array(train_labels_list)
+    train_labels = np.array(train_labels_list).astype(int)
     test = np.array(test_list).astype(np.float)
-    test_labels = np.array(test_labels_list)
-    
-    # print "Nombre de train labels: ", len(train_labels)
-    # print train_labels
-    #
-    # print "Nombre de test labels: ", len(test_labels)
-    # print test_labels_list
-    #
-    # print "Nombre de train: ", len(train)
-    # print train
-    #
-    # print "Nombre de test: ", len(test)
-    # print test
+    test_labels = np.array(test_labels_list).astype(int)
 
     # La fonction doit retourner 4 matrices (ou vecteurs) de type Numpy.
     return (train, train_labels, test, test_labels)
