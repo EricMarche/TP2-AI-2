@@ -55,33 +55,63 @@ bayesNaif_monks3.train(train_monks3, train_labels_monks3)
 
 # # Tester votre classifieur
 print "Knn - iris"
+print "Train"
+knn_iris.test(train_iris, train_labels_iris)
+print "Test"
 knn_iris.test(test_iris, test_labels_iris)
 print "****************"
 print "Knn - congress"
+print "Train"
+knn_congress.test(train_congress, train_labels_congress)
+print "Test"
 knn_congress.test(test_congress, test_labels_congress)
 print "****************"
 print "Knn - monks 1"
+print "Train"
+knn_monks1.test(train_monks1, train_labels_monks1)
+print "Test"
 knn_monks1.test(test_monks1, test_labels_monks1)
 print "****************"
 print "knn - monks 2"
+print "Train"
+knn_monks2.test(train_monks2, train_labels_monks2)
+print "Test"
 knn_monks2.test(test_monks2, test_labels_monks2)
 print "****************"
 print "Knn - monks 3"
+print "Train"
+knn_monks3.test(train_monks3, train_labels_monks3)
+print "Test"
 knn_monks3.test(test_monks3, test_labels_monks3)
 print "****************"
 
 print "Bayes - iris"
+print "Train"
+bayesNaif_iris.test(train_iris, train_labels_iris)
+print "Test"
 bayesNaif_iris.test(test_iris, test_labels_iris)
 print "****************"
 print "Bayes - congress"
+print "Train"
+bayesNaif_congress.test(train_congress, train_labels_congress)
+print "Test"
 bayesNaif_congress.test(test_congress, test_labels_congress)
 print "****************"
 print "Bayes - monks 1"
+print "Train"
+bayesNaif_monks1.test(train_monks1, train_labels_monks1)
+print "Test"
 bayesNaif_monks1.test(test_monks1, test_labels_monks1)
 print "****************"
 print "Bayes - monks 2"
+print "Train"
+bayesNaif_monks2.test(train_monks2, train_labels_monks2)
+print "Test"
 bayesNaif_monks2.test(test_monks2, test_labels_monks2)
 print "****************"
 print "Bayes - monks 3"
+print "Train"
+bayesNaif_monks3.test(train_monks3, train_labels_monks3)
+print "Test"
 bayesNaif_monks3.test(test_monks3, test_labels_monks3)
 print "****************"

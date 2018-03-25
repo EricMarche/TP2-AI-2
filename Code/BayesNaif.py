@@ -106,7 +106,7 @@ class BayesNaif:
             predictions.append(prediction)
         self.confusion_matrix(predictions, test_labels)
         stop = timeit.default_timer()
-        print "execution time for test : ",stop - start
+        print "execution time : ",stop - start
 
     def bayes(self, train, train_labels):
         means = {}
